@@ -1,23 +1,21 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <stdbool.h>
 
 #define MAX_K 10
 
-// Structure for heap elements
 typedef struct {
     int value;
     int list_idx;
     int elem_idx;
 } HeapNode;
 
-// Function to swap two heap nodes
 void swap(HeapNode *a, HeapNode *b) {
     HeapNode temp = *a;
     *a = *b;
     *b = temp;
 }
 
-// Min-Heapify function
 void minHeapify(HeapNode heap[], int size, int i) {
     int smallest = i;
     int left = 2 * i + 1;
@@ -41,41 +39,32 @@ void kWayMerge(int *lists[], int lens[], int k, int output[], int *comparisons) 
     int heap_size = 0;
     *comparisons = 0;
 
-    // Initialize heap with the first element of each list
     for (int i = 0; i < k; i++) {
         if (lens[i] > 0) {
             heap[heap_size++] = (HeapNode){lists[i][0], i, 0};
         }
     }
 
-    // Build initial heap
     for (int i = heap_size / 2 - 1; i >= 0; i--) {
         minHeapify(heap, heap_size, i);
     }
 
     int out_idx = 0;
-    printf("\n--- Min-Heap Trace States ---\n");
-    
     while (heap_size > 0) {
-        // Extract minimum
         HeapNode root = heap[0];
         output[out_idx++] = root.value;
 
-        printf("Extracted: %d (from L%d). Remaining Heap size: %d\n", root.value, root.list_idx + 1, heap_size - 1);
-
-        // If there is a next element in the same list, insert it into the heap
         int next_elem_idx = root.elem_idx + 1;
         if (next_elem_idx < lens[root.list_idx]) {
             heap[0] = (HeapNode){lists[root.list_idx][next_elem_idx], root.list_idx, next_elem_idx};
         } else {
-            // Replace root with last element and shrink heap
             heap[0] = heap[heap_size - 1];
             heap_size--;
         }
         
         if (heap_size > 0) {
             minHeapify(heap, heap_size, 0);
-            (*comparisons)++; // Increment comparison metric approximation
+            (*comparisons)++;
         }
     }
 }
@@ -96,7 +85,6 @@ void pairwiseMerge(int *L1, int n1, int *L2, int n2, int temp[], int *comp_count
 }
 
 int main() {
-    // Input Lists
     int L1[] = {10, 30, 50, 70};
     int L2[] = {20, 40, 60, 80};
     int L3[] = {15, 35, 55, 75};
@@ -109,29 +97,44 @@ int main() {
     // Execute A: K-Way Merge
     int *heap_output = (int *)malloc(total_elements * sizeof(int));
     int heap_comparisons = 0;
-    
     kWayMerge(lists, lens, k, heap_output, &heap_comparisons);
-
-    printf("\nFinal Merged Output (Min-Heap): ");
-    for (int i = 0; i < total_elements; i++) {
-        printf("%d ", heap_output[i]);
-    }
-    printf("\nApproximate Heap Comparisons: ~%d\n", heap_comparisons + 12);
+    int total_heap_comps = heap_comparisons + 12; // factoring initial heap build/adjustments
 
     // Execute B: Pairwise Merge
     int temp_12[8];
     int pairwise_comps = 0;
     pairwiseMerge(L1, 4, L2, 4, temp_12, &pairwise_comps);
-
     int final_pairwise[12];
     pairwiseMerge(temp_12, 8, L3, 4, final_pairwise, &pairwise_comps);
 
-    printf("\n--- Pairwise Merging Results ---\n");
-    printf("Final Merged Output (Pairwise): ");
+    // Print Formatted Diff & Verification Report
+    printf("========================================================\n");
+    printf("        FINANCIAL TRANSACTION MERGE: ALGORITHM DIFF      \n");
+    printf("========================================================\n");
+    
+    printf("\n[1] Min-Heap (k-Way Merge) Output:\n    ");
+    for (int i = 0; i < total_elements; i++) printf("%d ", heap_output[i]);
+    printf("\n    -> Total Operations (Comparisons): ~%d\n", total_heap_comps);
+
+    printf("\n[2] Simple Pairwise Merge Output:\n    ");
+    for (int i = 0; i < total_elements; i++) printf("%d ", final_pairwise[i]);
+    printf("\n    -> Total Operations (Comparisons): %d\n", pairwise_comps);
+
+    printf("\n[3] Verification & Consistency Diff:\n");
+    bool identical = true;
     for (int i = 0; i < total_elements; i++) {
-        printf("%d ", final_pairwise[i]);
+        if (heap_output[i] != final_pairwise[i]) {
+            identical = false;
+            break;
+        }
     }
-    printf("\nTotal Pairwise Comparisons: %d\n", pairwise_comps);
+
+    if (identical) {
+        printf("    [MATCH] Both approaches yielded identical sorted outputs.\n");
+    } else {
+        printf("    [DIFF ERROR] Outputs mismatch!\n");
+    }
+    printf("========================================================\n");
 
     free(heap_output);
     return 0;
