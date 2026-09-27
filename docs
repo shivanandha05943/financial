@@ -1,0 +1,38 @@
+# Execution Trace Tables
+
+## 1. Min-Heap ($k$-way Merge) Trace States
+**Initial Input Lists:**
+- $L_1 = [10, 30, 50, 70]$
+- $L_2 = [20, 40, 60, 80]$
+- $L_3 = [15, 35, 55, 75]$
+
+**Initialization:** Insert the first element of each list into the Min Heap: $\text{(10, } L_1\text{)}$, $\text{(15, } L_3\text{)}$, $\text{(20, } L_2\text{)}$.  
+**Initial Heap State:** `[(10, L1), (15, L3), (20, L2)]`
+
+| Step | Extracted Min | Next Element to Insert | Heap State After Re-heapification | Output List |
+| :--- | :--- | :--- | :--- | :--- |
+| **1** | `10` ($L_1$) | `30` ($L_1$, index 1) | `[(15, L3), (30, L1), (20, L2)]` | `[10]` |
+| **2** | `15` ($L_3$) | `35` ($L_3$, index 1) | `[(20, L2), (35, L3), (30, L1)]` | `[10, 15]` |
+| **3** | `20` ($L_2$) | `40` ($L_2$, index 1) | `[(30, L1), (35, L3), (40, L2)]` | `[10, 15, 20]` |
+| **4** | `30` ($L_1$) | `50` ($L_1$, index 2) | `[(35, L3), (50, L1), (40, L2)]` | `[10, 15, 20, 30]` |
+| **5** | `35` ($L_3$) | `55` ($L_3$, index 2) | `[(40, L2), (50, L1), (55, L3)]` | `[10, 15, 20, 30, 35]` |
+| **6** | `40` ($L_2$) | `60` ($L_2$, index 2) | `[(50, L1), (60, L2), (55, L3)]` | `[10, 15, 20, 30, 35, 40]` |
+| **7** | `50` ($L_1$) | `70` ($L_1$, index 3) | `[(55, L3), (60, L2), (70, L1)]` | `[10, 15, 20, 30, 35, 40, 50]` |
+| **8** | `55` ($L_3$) | `75` ($L_3$, index 3) | `[(60, L2), (75, L3), (70, L1)]` | `[10, 15, 20, 30, 35, 40, 50, 55]` |
+| **9** | `60` ($L_2$) | `80` ($L_2$, index 3) | `[(70, L1), (75, L3), (80, L2)]` | `[10, 15, 20, 30, 35, 40, 50, 55, 60]` |
+| **10** | `70` ($L_1$) | None (End of $L_1$) | `[(75, L3), (80, L2)]` | `[10, ..., 70]` |
+| **11** | `75` ($L_3$) | None (End of $L_3$) | `[(80, L2)]` | `[10, ..., 75]` |
+| **12** | `80` ($L_2$) | None (End of $L_2$) | `[]` | `[10, 15, 20, 30, 35, 40, 50, 55, 60, 70, 75, 80]` |
+
+---
+
+## 2. Simple Pairwise Merging Approach Trace
+1. **Merge $L_1$ and $L_2$:**
+   - Comparing elements pairwise from $L_1 = [10, 30, 50, 70]$ and $L_2 = [20, 40, 60, 80]$.
+   - Intermediate Result $T_1 = [10, 20, 30, 40, 50, 60, 70, 80]$
+   - **Comparisons made:** $7$ comparisons.
+2. **Merge Intermediate $T_1$ with $L_3$:**
+   - Comparing $T_1 = [10, 20, 30, 40, 50, 60, 70, 80]$ and $L_3 = [15, 35, 55, 75]$.
+   - Final Merged Result = $[10, 15, 20, 30, 35, 40, 50, 55, 60, 70, 75, 80]$
+   - **Comparisons made:** $11$ comparisons.
+   - **Total Comparisons:** $7 + 11 = 18$ comparisons.
