@@ -1,0 +1,23 @@
+=== FINANCIAL TRANSACTION MERGE EXECUTION RESULTS ===
+
+--- Min-Heap Trace States ---
+Extracted: 10 (from L1). Remaining Heap size: 2
+Extracted: 15 (from L3). Remaining Heap size: 2
+Extracted: 20 (from L2). Remaining Heap size: 2
+Extracted: 30 (from L1). Remaining Heap size: 2
+Extracted: 35 (from L3). Remaining Heap size: 2
+Extracted: 40 (from L2). Remaining Heap size: 2
+Extracted: 50 (from L1). Remaining Heap size: 2
+Extracted: 55 (from L3). Remaining Heap size: 2
+Extracted: 60 (from L2). Remaining Heap size: 2
+Extracted: 70 (from L1). Remaining Heap size: 1
+Extracted: 75 (from L3). Remaining Heap size: 0
+
+Final Merged Output (Min-Heap): 10 15 20 30 35 40 50 55 60 70 75 80 
+Approximate Heap Comparisons: ~19
+
+--- Pairwise Merging Results ---
+Final Merged Output (Pairwise): 10 15 20 30 35 40 50 55 60 70 75 80 
+Total Pairwise Comparisons: 18
+
+=== EXECUTION SUCCESSFUL ===
